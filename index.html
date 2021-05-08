@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -47,8 +48,26 @@
 	<script type="text/javascript">
 
 		$(document).ready(function() {
+			const URL = 'https://www.dnd5eapi.co/api/monsters?name=';
 
 			let queryAPI = (name) => {
+				let cardGroup = $('.card-group'),
+				    card = $(cardGroup).find('.card'),
+				    url = name.length ? + name : URL + name.trim();
+
+				$.get(url, function(res) {
+					var monsters = res.results;
+					for(var i = 0; i < monsters.length;i++) {
+						var newCard = card.clone(),
+						    mon = monsters[i];
+
+						$(newCard).find('.card-title').text(mon.name.trim());
+						$(newCard).find('.card-text').text(mon.name.trim());
+						$(cardGroup).append(newCard);
+					}
+				});
+
+				/*
 				var cardGroup = $('.card-group'),
 				    card = $(cardGroup).find('.card');
 
@@ -67,6 +86,11 @@
 					$(cardGroup).remove(card);
 					$('#MonstersList').removeClass('d-none');
 				});
+				*/
+			};
+
+			let findByMonsterName = (name) => {
+				queryAPI(name);
 			};
 
 			let formSubmit = (e) => {
@@ -82,7 +106,7 @@
 
 	<style>
 		.card {
-			min-width: 200px;
+			min-width: 350px;
 			padding: 10px;
 		}
 		.card-img-top {
